@@ -6,7 +6,7 @@ const Canvas = ({elements, selectElement}) => {
     return (
         <div className="canvas">
             {elements.map((element) => (
-                <Element id={element.id} value={element.value} borderColor={Element.borderColor} selectElement={selectElement}/>
+                <Element id={element.id} value={element.value} selected={element.selected} selectElement={selectElement}/>
             ))}
         </div>
     )

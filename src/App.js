@@ -17,15 +17,18 @@ function App() {
     }
     const newElement = {
       value: elementValue,
-      id: new Date().getTime() 
+      id: new Date().getTime(),
+      selected: false
     }
     setElements([...elements, newElement])
   }
 
   const selectElement = (id) => {
     if (!selectedElements.includes(id)) {
+      elements.find((element) => element.id === id).selected = true
       setSelectedElements([...selectedElements, id])
     } else {
+      elements.find((element) => element.id === id).selected = false
       setSelectedElements(selectedElements.filter((element) => element !== id))
     }
   }

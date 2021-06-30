@@ -54,3 +54,7 @@ code {
   flex-direction:column;
   text-align:center;
 }
+
+.selected-element {
+  border:solid 5px red;
+}
