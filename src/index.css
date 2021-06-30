@@ -17,6 +17,7 @@ code {
   min-height:100vh;
   text-align:center;
   background-color: yellow;
+  float:left;
 }
 
 .sidebar-header {
@@ -29,4 +30,27 @@ code {
   padding:25px 0 25px 0;
   cursor:pointer;
   border-bottom: 1px solid gray;
+}
+
+.canvas {
+  background-color:beige;
+  min-height:100vh;
+  margin-left:250px;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content:center;
+  align-content:flex-start;
+}
+
+.element {
+  border:solid 5px black;
+  height:100px;
+  width:100px;
+  border-radius:50%;
+  margin:0px 0px 20px 20px;
+  display:flex;
+  justify-content:center;
+  align-content:center;
+  flex-direction:column;
+  text-align:center;
 }
