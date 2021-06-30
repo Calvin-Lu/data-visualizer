@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Element = ({ key, value }) => {
+const Element = ({ id, value, selectElement }) => {
     return (
-        <div className="element">
+        <div className="element" onClick={() => selectElement(id)}>
             {value}
         </div>
     )
