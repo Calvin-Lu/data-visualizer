@@ -96,9 +96,21 @@ function App() {
     }
   }
 
+  const clearCanvas = () => {
+    if (window.confirm("This will delete all elements in the canvas. \n\nContinue?")) {
+      setElements([])
+    }
+  }
+
   return (
     <div className="App">
-      <Sidebar addElement={addElement} deleteSelectedElements={deleteSelectedElements} elements={elements} quickSort={quickSort}/>
+      <Sidebar 
+      addElement={addElement} 
+      deleteSelectedElements={deleteSelectedElements} 
+      elements={elements} 
+      quickSort={quickSort}
+      clearCanvas={clearCanvas}
+      />
       <Canvas elements={elements} selectElement={selectElement}></Canvas>
     </div>
   );
