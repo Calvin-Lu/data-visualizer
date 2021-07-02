@@ -46,7 +46,7 @@ function App() {
   const quickSort = (start, end) => {
     console.log(elements)
     console.log(start + " " + end)
-    if ((end-start) < 2) {
+    if ((end-start) < 1) {
       return
     }
     const pivot = elements[end]
