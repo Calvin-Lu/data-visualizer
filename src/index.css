@@ -39,7 +39,7 @@ code {
   display:flex;
   flex-wrap: wrap;
   justify-content:center;
-  align-content:flex-start;
+  align-content:center;
 }
 
 .element {
@@ -53,6 +53,7 @@ code {
   align-content:center;
   flex-direction:column;
   text-align:center;
+  cursor:pointer;
 }
 
 .selected-element {
