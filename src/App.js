@@ -21,7 +21,7 @@ function App() {
       return;
     }
     const newElement = {
-      value: elementValue,
+      value: parseInt(elementValue),
       id: new Date().getTime(),
       selected: false
     }
@@ -44,9 +44,7 @@ function App() {
   }
 
   const quickSort = (start, end) => {
-    console.log(elements)
-    console.log(start + " " + end)
-    if ((end-start) < 1) {
+    if ((end-start) < 1) { //subarray of length 1
       return
     }
     const pivot = elements[end]
@@ -54,7 +52,7 @@ function App() {
     let lp = start
     let rp = end - 1
     alert("The pivot is the last element: " + pivot.value)
-    while (lp < rp) {
+    while (lp <= rp) {
       while (elements[lp].value <= pivot.value && lp <= pivotIndex) {
         lp++
         if (lp > pivotIndex) { //prevent invalid reference
@@ -87,7 +85,7 @@ function App() {
       setElements([...elements])
       quickSort(newPivotIndex + 1, end)
     } else {
-      alert("Swapping pivot and element at left pointer.")
+      alert("Swapping pivot " + elements[pivotIndex].value + " and element at left pointer " + elements[lp].value)
       const newPivotIndex = lp;
       [elements[lp], elements[pivotIndex]] = [elements[pivotIndex],elements[lp]]
       setElements([...elements])
