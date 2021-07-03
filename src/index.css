@@ -34,7 +34,7 @@ code {
 
 .canvas {
   background-color:beige;
-  min-height:100vh;
+  min-height:75vh;
   margin-left:250px;
   display:flex;
   flex-wrap: wrap;
@@ -54,8 +54,28 @@ code {
   flex-direction:column;
   text-align:center;
   cursor:pointer;
+  word-wrap:break-word;
+}
+
+.element-text {
+  max-width:80px;
+  align-self:center;
 }
 
 .selected-element {
   border:solid 5px red;
+}
+
+.record {
+  min-height:25vh;
+  max-height:25vh;
+  margin-left:250px;
+  background-color:whitesmoke;
+  border:3px solid black;
+  overflow-y:scroll;
+}
+
+.record-entry {
+  font-size:24px;
+  color:red;
 }

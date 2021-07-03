@@ -1,19 +1,18 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useRef} from 'react'
 import Sidebar from './components/Sidebar'
 import Canvas from './components/Canvas'
+import Record from './components/Record'
 import './index.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import cloneDeep from 'lodash/cloneDeep'
 
 function App() {
   // const [currentStructure, setCurrentStructure]=useState('') //keeps track of selected data structure
   const [elements, setElements] = useState([])
   const [selectedElements, setSelectedElements] = useState([])
+  const [record, setRecord] = useState([])
+  const tempRecord = useRef([]) //tempRecord is actively updated during algorithm execution, and then is used to update the record state
 
-  useEffect(() => {
-    setElements(elements)
-    console.log("Effect re-render")
-  },[elements])
- 
   const addElement = () => {
     const elementValue = prompt("Please input a numerical value for the new element:")
     if (isNaN(elementValue)) {
@@ -21,7 +20,7 @@ function App() {
       return;
     }
     const newElement = {
-      value: parseInt(elementValue),
+      value: Number(elementValue),
       id: new Date().getTime(),
       selected: false
     }
@@ -51,7 +50,7 @@ function App() {
     const pivotIndex = end
     let lp = start
     let rp = end - 1
-    alert("The pivot is the last element: " + pivot.value)
+    updateTempRecord(`The pivot is the last element: ${pivot.value}`)
     while (lp <= rp) {
       while (elements[lp].value <= pivot.value && lp <= pivotIndex) {
         lp++
@@ -66,8 +65,8 @@ function App() {
         }
       }
       if (!(lp > pivotIndex || rp < 0 || lp > rp)) {
-        alert("The leftmost element greater than the pivot is: " + elements[lp].value
-        + "\nThe rightmost element less than the pivot is: " + elements[rp].value); //semicolon necessary
+        updateTempRecord(`The leftmost element greater than the pivot is: ${elements[lp].value}
+         \nThe rightmost element less than the pivot is: ${elements[rp].value}`); //semicolon necessary
         [elements[lp], elements[rp]] = [elements[rp], elements[lp]]
         setElements([...elements]) //Need to spread the array to trigger re-render
         lp++
@@ -75,30 +74,58 @@ function App() {
       }
     }
     if (lp > pivotIndex) {
+      updateTempRecord("Value at pivot is largest")
       setElements([...elements])
-      alert("value at pivot is largest")
       quickSort(start, end - 1)
     } else if (rp < 0) {
-      alert("value at pivot is smallest")
+      updateTempRecord("Value at pivot is smallest")
       const newPivotIndex = start;
       [elements[start], elements[pivotIndex]] = [elements[pivotIndex], elements[start]]
       setElements([...elements])
       quickSort(newPivotIndex + 1, end)
     } else {
-      alert("Swapping pivot " + elements[pivotIndex].value + " and element at left pointer " + elements[lp].value)
+      updateTempRecord(`Swapping pivot ${elements[pivotIndex].value} with element at left pointer ${elements[lp].value}`)
       const newPivotIndex = lp;
       [elements[lp], elements[pivotIndex]] = [elements[pivotIndex],elements[lp]]
       setElements([...elements])
       quickSort(0, newPivotIndex - 1)
       quickSort(newPivotIndex + 1, end)
     }
+    console.log(tempRecord)
   }
+
 
   const clearCanvas = () => {
     if (window.confirm("This will delete all elements in the canvas. \n\nContinue?")) {
       setElements([])
     }
   }
+
+  const updateTempRecord = (text) => {
+    tempRecord.current = [...tempRecord.current, text]
+  }
+
+  const showRecord = () => {
+    console.log("showRecord called")
+    console.log(tempRecord)
+    console.log(record)
+    const newRecordArray = []
+    for (let i = 0; i < tempRecord.current.length; i++) {
+      console.log("loop iteration " + i)
+      const newRecord = {
+        id: new Date().getTime() + Math.floor(Math.random() * 100),
+        text: tempRecord.current[i]
+      }
+      newRecordArray.push(newRecord)
+    }
+    setRecord(newRecordArray)
+  }
+
+
+  // const clearRecord = () => {
+  //   tempRecord = []
+  //   setRecord([])
+  // }
 
   return (
     <div className="App">
@@ -108,8 +135,10 @@ function App() {
       elements={elements} 
       quickSort={quickSort}
       clearCanvas={clearCanvas}
+      showRecord={showRecord}
       />
       <Canvas elements={elements} selectElement={selectElement}></Canvas>
+      <Record record={record}/>
     </div>
   );
 }
