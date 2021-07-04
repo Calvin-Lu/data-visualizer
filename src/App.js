@@ -5,6 +5,7 @@ import Record from './components/Record'
 import './index.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import cloneDeep from 'lodash/cloneDeep'
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
   // const [currentStructure, setCurrentStructure]=useState('') //keeps track of selected data structure
@@ -21,7 +22,7 @@ function App() {
     }
     const newElement = {
       value: Number(elementValue),
-      id: new Date().getTime(),
+      id: uuidv4(),
       selected: false
     }
     setElements([...elements, newElement])
@@ -74,11 +75,12 @@ function App() {
       }
     }
     if (lp > pivotIndex) {
-      updateTempRecord("Value at pivot is largest")
+      updateTempRecord(`Value at pivot is largest in passed subarray. The pivot element will remain at its current index`)
       setElements([...elements])
       quickSort(start, end - 1)
     } else if (rp < 0) {
-      updateTempRecord("Value at pivot is smallest")
+      updateTempRecord(`Value at pivot is smallest in passed subarray. The pivot element will be 
+      swapped with the leftmost element in the passed subarray ${elements[start]}`)
       const newPivotIndex = start;
       [elements[start], elements[pivotIndex]] = [elements[pivotIndex], elements[start]]
       setElements([...elements])
@@ -113,7 +115,7 @@ function App() {
     for (let i = 0; i < tempRecord.current.length; i++) {
       console.log("loop iteration " + i)
       const newRecord = {
-        id: new Date().getTime() + Math.floor(Math.random() * 100),
+        id: uuidv4(),
         text: tempRecord.current[i]
       }
       newRecordArray.push(newRecord)
