@@ -1,8 +1,8 @@
 import React from 'react'
 
-const RecordEntry = ({ text }) => {
+const RecordEntry = ({ text, id, selected, selectRecord }) => {
     return (
-        <div className="record-entry">
+        <div className={`record-entry ${selected ? "selected-record-entry" : ""}`} onClick={() => selectRecord(id)}>
             {text}
         </div>
     )

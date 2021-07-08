@@ -4,14 +4,14 @@ import Canvas from './components/Canvas'
 import Record from './components/Record'
 import './index.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import cloneDeep from 'lodash/cloneDeep'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 
 function App() {
   // const [currentStructure, setCurrentStructure]=useState('') //keeps track of selected data structure
   const [elements, setElements] = useState([])
   const [selectedElements, setSelectedElements] = useState([])
   const [record, setRecord] = useState([])
+  const [selectedRecord, setSelectedRecord] = useState("") //only one record can be selected at a time
   const tempRecord = useRef([]) //tempRecord is actively updated during algorithm execution, and then is used to update the record state
 
   const addElement = () => {
@@ -93,13 +93,13 @@ function App() {
       quickSort(0, newPivotIndex - 1)
       quickSort(newPivotIndex + 1, end)
     }
-    console.log(tempRecord)
   }
 
 
   const clearCanvas = () => {
-    if (window.confirm("This will delete all elements in the canvas. \n\nContinue?")) {
+    if (window.confirm("This will delete all elements in the canvas and the record. \n\nContinue?")) {
       setElements([])
+      setRecord([])
     }
   }
 
@@ -108,21 +108,31 @@ function App() {
   }
 
   const showRecord = () => {
-    console.log("showRecord called")
-    console.log(tempRecord)
-    console.log(record)
     const newRecordArray = []
     for (let i = 0; i < tempRecord.current.length; i++) {
-      console.log("loop iteration " + i)
       const newRecord = {
         id: uuidv4(),
-        text: tempRecord.current[i]
+        text: tempRecord.current[i],
+        selected: false
       }
       newRecordArray.push(newRecord)
     }
     setRecord(newRecordArray)
   }
 
+  const selectRecord = (id) => {
+    if (!(selectedRecord === id)) {
+      // first step is to deselect currently selected record (if there is such a record)
+      if (selectedRecord !== "") { 
+        record.find((entry) => entry.id === selectedRecord).selected = false 
+      }
+      record.find((entry) => entry.id === id).selected = true
+      setSelectedRecord(id)
+    } else {
+      record.find((entry) => entry.id === id).selected = false
+      setSelectedRecord("")
+    }
+  }
 
   // const clearRecord = () => {
   //   tempRecord = []
@@ -131,16 +141,22 @@ function App() {
 
   return (
     <div className="App">
-      <Sidebar 
-      addElement={addElement} 
-      deleteSelectedElements={deleteSelectedElements} 
-      elements={elements} 
+      <Sidebar
+      addElement={addElement}
+      deleteSelectedElements={deleteSelectedElements}
+      elements={elements}
       quickSort={quickSort}
       clearCanvas={clearCanvas}
       showRecord={showRecord}
       />
-      <Canvas elements={elements} selectElement={selectElement}></Canvas>
-      <Record record={record}/>
+      <Canvas 
+      elements={elements} 
+      selectElement={selectElement}>
+      </Canvas>
+      <Record 
+      record={record} 
+      selectRecord={selectRecord}
+      />
     </div>
   );
 }

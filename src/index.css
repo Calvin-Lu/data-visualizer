@@ -78,4 +78,9 @@ code {
 .record-entry {
   font-size:24px;
   color:red;
+  cursor:pointer;
+}
+
+.selected-record-entry {
+  background-color:lightskyblue;
 }
