@@ -11,6 +11,7 @@ function App() {
   const [elements, setElements] = useState([])
   const [selectedElements, setSelectedElements] = useState([])
   const [record, setRecord] = useState([])
+  const [displayRecord, setDisplayRecord] = useState(false) //tracks whether record interface is visible
   const [selectedRecord, setSelectedRecord] = useState("") //only one record can be selected at a time
   const tempRecord = useRef([]) //tempRecord is actively updated during algorithm execution, and then is used to update the record state
 
@@ -111,6 +112,7 @@ function App() {
   }
 
   const showRecord = () => {
+    setDisplayRecord(!displayRecord)
     const newRecordArray = []
     for (let i = 0; i < tempRecord.current.length; i++) {
       const newRecord = {
@@ -153,8 +155,10 @@ function App() {
       quickSort={quickSort}
       clearCanvas={clearCanvas}
       showRecord={showRecord}
+      displayRecord={displayRecord}
       />
-      <Record 
+      <Record
+      displayRecord={displayRecord} 
       record={record} 
       selectRecord={selectRecord}
       />

@@ -6,7 +6,7 @@ import Logo from '../img/logo.png'
 const Navigation = () => {
     return (
         <>
-        <Navbar bg="dark" variant="dark">
+        <Navbar bg="dark" variant="dark" className="navigation-bar">
             <Container className="justify-content-center">
             <Navbar.Brand href="#home">
                 <img

@@ -32,13 +32,20 @@ code {
   border-bottom: 1px solid gray;
 } */
 
+.navigation-bar {
+  min-height:10vh;
+}
+
 .canvas {
   background-color:beige;
-  min-height:75vh;
+  min-height:65vh;
   display:flex;
   flex-wrap: wrap;
   justify-content:center;
   align-content:center;
+}
+.canvas-record-hidden {
+  min-height:90vh;
 }
 
 .element {
