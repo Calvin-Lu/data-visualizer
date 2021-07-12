@@ -1,7 +1,7 @@
 import React, {useState, useRef} from 'react'
-import Sidebar from './components/Sidebar'
 import Canvas from './components/Canvas'
 import Record from './components/Record'
+import Navigation from './components/Navigation'
 import './index.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { v4 as uuidv4 } from 'uuid'
@@ -144,7 +144,7 @@ function App() {
 
   return (
     <div className="App">
-      <Sidebar/>
+      <Navigation/>
       <Canvas 
       elements={elements} 
       selectElement={selectElement}
