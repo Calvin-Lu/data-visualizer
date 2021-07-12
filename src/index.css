@@ -75,12 +75,33 @@ code {
   overflow-y:scroll;
 }
 
+.record-header {
+  text-align:center;
+}
+
 .record-entry {
-  font-size:24px;
-  color:red;
+  font-size:18px;
+  color:black;
   cursor:pointer;
 }
 
 .selected-record-entry {
   background-color:lightskyblue;
+}
+
+.function-box {
+  background-color:lightyellow;
+  border:3px solid black;
+  padding: 7px 7px 7px 7px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  text-align:center;
+  cursor:move;
+  position:absolute;
+}
+
+.function-box-button {
+  margin-top:5px;
+  margin-bottom:5px;
 }

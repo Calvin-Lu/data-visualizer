@@ -23,7 +23,9 @@ function App() {
     const newElement = {
       value: Number(elementValue),
       id: uuidv4(),
-      selected: false
+      selected: false,
+      parent: null,
+      child: null
     }
     setElements([...elements, newElement])
   }
@@ -51,6 +53,7 @@ function App() {
     const pivotIndex = end
     let lp = start
     let rp = end - 1
+    updateTempRecord(`The current subarray is [${elements.slice(start, end + 1).map((element) => element.value)}]`)
     updateTempRecord(`The pivot is the last element: ${pivot.value}`)
     while (lp <= rp) {
       while (elements[lp].value <= pivot.value && lp <= pivotIndex) {
@@ -76,11 +79,11 @@ function App() {
     }
     if (lp > pivotIndex) {
       updateTempRecord(`Value at pivot is largest in passed subarray. The pivot element will remain at its current index`)
-      setElements([...elements])
+      setElements([...elements])       
       quickSort(start, end - 1)
     } else if (rp < 0) {
       updateTempRecord(`Value at pivot is smallest in passed subarray. The pivot element will be 
-      swapped with the leftmost element in the passed subarray ${elements[start]}`)
+      swapped with the leftmost element in the passed subarray ${elements[start].value}`)
       const newPivotIndex = start;
       [elements[start], elements[pivotIndex]] = [elements[pivotIndex], elements[start]]
       setElements([...elements])
@@ -141,18 +144,16 @@ function App() {
 
   return (
     <div className="App">
-      <Sidebar
+      <Sidebar/>
+      <Canvas 
+      elements={elements} 
+      selectElement={selectElement}
       addElement={addElement}
       deleteSelectedElements={deleteSelectedElements}
-      elements={elements}
       quickSort={quickSort}
       clearCanvas={clearCanvas}
       showRecord={showRecord}
       />
-      <Canvas 
-      elements={elements} 
-      selectElement={selectElement}>
-      </Canvas>
       <Record 
       record={record} 
       selectRecord={selectRecord}
