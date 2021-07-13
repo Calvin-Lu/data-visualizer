@@ -14,7 +14,7 @@ const Canvas = ({elements, selectElement,  addElement, deleteSelectedElements, q
                 <Element key={element.id} id={element.id} value={element.value} selected={element.selected} selectElement={selectElement} currentStructure={currentStructure}/>
             ))}
             {graphEdges.map((edge) => (
-                <LineTo from={edge[0]} to={edge[1]} borderWidth={2} borderColor="black" zIndex={1}/>
+                <LineTo from={edge[0]} to={edge[1]} borderWidth={2} borderColor="black" zIndex={1} delay={100}/>
             ))}
             <FunctionBox 
             elements={elements}
