@@ -153,9 +153,12 @@ function App() {
       return
     }
     const newEdge = [selectedElements[0], selectedElements[1]]
-    for (let i = 0; i++; i < graphEdges.length) {
+    for (let i = 0; i <graphEdges.length; i++) {
+      console.log(graphEdges[i])
+      console.log(newEdge)
+      console.log(equalArrays(graphEdges[i], newEdge))
       if (equalArrays(graphEdges[i], newEdge)) {
-        alert("There already exists an edge between these two vertices")
+        alert("There already exists an edge between these two vertices.")
         return
       }
     }
