@@ -2,8 +2,9 @@ import React from 'react'
 import Element from './Element'
 import '../index.css'
 import FunctionBox from './FunctionBox'
+import LineTo from 'react-lineto'
 
-const Canvas = ({elements, selectElement,  addElement, deleteSelectedElements, quickSort, clearCanvas, showRecord, displayRecord, currentStructure, selectStructure} ) => {
+const Canvas = ({elements, selectElement,  addElement, deleteSelectedElements, quickSort, clearCanvas, showRecord, displayRecord, currentStructure, selectStructure, graphEdges, addGraphEdge} ) => {
     return (
         <div className={displayRecord ? "canvas" : "canvas canvas-record-hidden"}>
             <h1>{currentStructure === "" ? 
@@ -11,6 +12,9 @@ const Canvas = ({elements, selectElement,  addElement, deleteSelectedElements, q
             </h1>
             {elements.map((element) => (
                 <Element key={element.id} id={element.id} value={element.value} selected={element.selected} selectElement={selectElement}/>
+            ))}
+            {graphEdges.map((edge) => (
+                <LineTo from={edge[0]} to={edge[1]} borderWidth={3} borderColor="black" zIndex={1}/>
             ))}
             <FunctionBox 
             elements={elements}
@@ -21,7 +25,9 @@ const Canvas = ({elements, selectElement,  addElement, deleteSelectedElements, q
             clearCanvas={clearCanvas}
             showRecord={showRecord}
             displayRecord={displayRecord}
+            currentStructure={currentStructure}
             selectStructure={selectStructure}
+            addGraphEdge={addGraphEdge}
             />
         </div>
     )

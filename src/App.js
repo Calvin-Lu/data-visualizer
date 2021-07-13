@@ -13,7 +13,9 @@ function App() {
   const [record, setRecord] = useState([])
   const [displayRecord, setDisplayRecord] = useState(false) //tracks whether record interface is visible
   const [selectedRecord, setSelectedRecord] = useState("") //only one record can be selected at a time
+  const [graphEdges, setGraphEdges] = useState([])
   const tempRecord = useRef([]) //tempRecord is actively updated during algorithm execution, and then is used to update the record state
+
 
   const addElement = () => {
     const elementValue = prompt("Please input a numerical value for the new element:")
@@ -24,9 +26,7 @@ function App() {
     const newElement = {
       value: Number(elementValue),
       id: uuidv4(),
-      selected: false,
-      parent: null,
-      child: null
+      selected: false
     }
     setElements([...elements, newElement])
   }
@@ -104,6 +104,7 @@ function App() {
     if (window.confirm("This will delete all elements in the canvas and the record. \n\nContinue?")) {
       setElements([])
       setRecord([])
+      setGraphEdges([])
     }
   }
 
@@ -143,6 +144,31 @@ function App() {
     setCurrentStructure(dataStructure)
   }
 
+  const addGraphEdge = () => {
+    if (selectedElements.length > 2) {
+      alert("You cannot select more than 2 elements when creating a graph edge.")
+      return
+    } else if (selectedElements.length < 2) {
+      alert("You must select 2 elements when creating a graph edge.")
+      return
+    }
+    const newEdge = [selectedElements[0], selectedElements[1]]
+    for (let i = 0; i++; i < graphEdges.length) {
+      if (equalArrays(graphEdges[i], newEdge)) {
+        alert("There already exists an edge between these two vertices")
+        return
+      }
+    }
+    selectElement(newEdge[0])  //Deselects the currently selected elements
+    selectElement(newEdge[1])
+    setSelectedElements([])
+    setGraphEdges([...graphEdges, newEdge])
+  }
+
+  const equalArrays = (a, b) => {
+    return (a.length === b.length) && a.every((v, i) => v === b[i])
+  }
+
   // const clearRecord = () => {
   //   tempRecord = []
   //   setRecord([])
@@ -162,6 +188,8 @@ function App() {
       displayRecord={displayRecord}
       currentStructure={currentStructure}
       selectStructure={selectStructure}
+      graphEdges={graphEdges}
+      addGraphEdge={addGraphEdge}
       />
       <Record
       displayRecord={displayRecord} 

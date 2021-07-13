@@ -55,6 +55,7 @@ code {
 
 .element {
   border:solid 5px black;
+  background-color:beige;
   height:100px;
   width:100px;
   border-radius:50%;
@@ -66,6 +67,7 @@ code {
   text-align:center;
   cursor:pointer;
   word-wrap:break-word;
+  z-index:2;
 }
 
 .element-text {
@@ -110,6 +112,7 @@ code {
   cursor:move;
   position:absolute;
   left:0px;
+  top:20%;
 }
 
 .function-box-button {

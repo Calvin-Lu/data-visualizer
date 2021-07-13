@@ -2,7 +2,7 @@ import React from 'react'
 import Button from 'react-bootstrap/Button'
 import Draggable from 'react-draggable'
 
-const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, clearCanvas, showRecord, displayRecord, selectStructure }) => {
+const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, clearCanvas, showRecord, displayRecord, currentStructure, selectStructure, addGraphEdge }) => {
     return (
         <Draggable bounds="body">
             <div className="function-box">
@@ -14,8 +14,13 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                 <Button className="btn-danger function-box-button" onClick={deleteSelectedElements}>- Delete Selected Elements</Button>
                 <Button className="btn-danger function-box-button" onClick={clearCanvas}>Clear Canvas and Record</Button>
                 <Button className="btn-info function-box-button" onClick={showRecord}>{displayRecord ? "Hide Record" : "Show Record"}</Button>
+                {currentStructure === "graph" ? 
+                <Button className="btn-warning function-box-button" onClick={addGraphEdge}>Create Graph Edge</Button>  
+                : null}                
                 <h3>Algorithms</h3>
-                <Button className="btn-warning function-box-button" onClick={() => quickSort(0, elements.length - 1)}>Apply Quick Sort</Button>
+                {currentStructure ==="array" ?
+                <Button className="btn-success function-box-button" onClick={() => quickSort(0, elements.length - 1)}>Apply Quick Sort</Button>
+                : null}
             </div>
         </Draggable>
     )
