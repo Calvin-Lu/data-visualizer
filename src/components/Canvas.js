@@ -11,10 +11,10 @@ const Canvas = ({elements, selectElement,  addElement, deleteSelectedElements, q
             "No currently selected data structure" : `The currently selected data structure is: ${currentStructure}`}
             </h1>
             {elements.map((element) => (
-                <Element key={element.id} id={element.id} value={element.value} selected={element.selected} selectElement={selectElement}/>
+                <Element key={element.id} id={element.id} value={element.value} selected={element.selected} selectElement={selectElement} currentStructure={currentStructure}/>
             ))}
             {graphEdges.map((edge) => (
-                <LineTo from={edge[0]} to={edge[1]} borderWidth={3} borderColor="black" zIndex={1}/>
+                <LineTo from={edge[0]} to={edge[1]} borderWidth={2} borderColor="black" zIndex={1}/>
             ))}
             <FunctionBox 
             elements={elements}

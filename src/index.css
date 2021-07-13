@@ -70,8 +70,13 @@ code {
   z-index:2;
 }
 
+.element-container {
+  z-index:2;
+}
+
 .element-text {
   max-width:80px;
+  font-size:28px;
   align-self:center;
 }
 
