@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { v4 as uuidv4 } from 'uuid'
 
 function App() {
-  // const [currentStructure, setCurrentStructure]=useState('') //keeps track of selected data structure
+  const [currentStructure, setCurrentStructure]=useState('') //keeps track of selected data structure
   const [elements, setElements] = useState([])
   const [selectedElements, setSelectedElements] = useState([])
   const [record, setRecord] = useState([])
@@ -139,6 +139,10 @@ function App() {
     }
   }
 
+  const selectStructure = (dataStructure) => {
+    setCurrentStructure(dataStructure)
+  }
+
   // const clearRecord = () => {
   //   tempRecord = []
   //   setRecord([])
@@ -156,6 +160,8 @@ function App() {
       clearCanvas={clearCanvas}
       showRecord={showRecord}
       displayRecord={displayRecord}
+      currentStructure={currentStructure}
+      selectStructure={selectStructure}
       />
       <Record
       displayRecord={displayRecord} 

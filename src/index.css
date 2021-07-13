@@ -34,6 +34,7 @@ code {
 
 .navigation-bar {
   min-height:10vh;
+  max-height:20vh;
 }
 
 .canvas {
@@ -46,6 +47,10 @@ code {
 }
 .canvas-record-hidden {
   min-height:90vh;
+}
+
+.canvas h1 {
+  position:absolute;
 }
 
 .element {
@@ -104,6 +109,7 @@ code {
   text-align:center;
   cursor:move;
   position:absolute;
+  left:0px;
 }
 
 .function-box-button {

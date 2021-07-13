@@ -2,13 +2,13 @@ import React from 'react'
 import Button from 'react-bootstrap/Button'
 import Draggable from 'react-draggable'
 
-const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, clearCanvas, showRecord, displayRecord }) => {
+const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, clearCanvas, showRecord, displayRecord, selectStructure }) => {
     return (
         <Draggable bounds="body">
             <div className="function-box">
                 <h3>Data Structures</h3>
-                <Button className="btn-dark function-box-button">Array</Button>
-                <Button className="btn-dark function-box-button">Graph</Button>
+                <Button className="btn-dark function-box-button" onClick={() => selectStructure('array')}>Array</Button>
+                <Button className="btn-dark function-box-button" onClick={() => selectStructure('graph')}>Graph</Button>
                 <h3>Functions</h3>
                 <Button className="function-box-button" onClick={addElement}>+ Add Element</Button>
                 <Button className="btn-danger function-box-button" onClick={deleteSelectedElements}>- Delete Selected Elements</Button>
