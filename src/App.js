@@ -18,17 +18,27 @@ function App() {
 
 
   const addElement = () => {
-    const elementValue = prompt("Please input a numerical value for the new element:")
-    if (isNaN(elementValue)) {
-      alert("Invalid: input must be a number.")
-      return;
+    if (currentStructure === "") {
+      alert("Please select a data structure before attempting to add an element.")
+      return
     }
-    const newElement = {
-      value: Number(elementValue),
-      id: uuidv4(),
-      selected: false
+    const userInput = prompt("Multiple values must be separated by commas. \n\nPlease input one or more numerical values for the new element(s):")
+    const inputtedValues = userInput.split(",")
+    const temp = []
+    for (let i = 0; i < inputtedValues.length; i++) {
+
+      if (isNaN(inputtedValues[i])) {
+        alert("Invalid input: Input can only contain numbers and commas")
+        return
+      }
+      const newElement = {
+        value: Number(inputtedValues[i]),
+        id: uuidv4(),
+        selected:false
+      }
+      temp.push(newElement)   //calling setElements inside the for loop would result in only the last element being appended
     }
-    setElements([...elements, newElement])
+    setElements([...elements, ...temp])
   }
 
   const selectElement = (id) => {
@@ -180,11 +190,6 @@ function App() {
   const equalArrays = (a, b) => {
     return (a.length === b.length) && a.every((v, i) => v === b[i])
   }
-
-  // const clearRecord = () => {
-  //   tempRecord = []
-  //   setRecord([])
-  // }
 
   return (
     <div className="App">
