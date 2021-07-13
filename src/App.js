@@ -143,11 +143,13 @@ function App() {
   const selectStructure = (dataStructure) => {
     if (currentStructure === "graph") {
       if (window.confirm("This will delete all existing records and graph edges. \n\nContinue?")) {
+        tempRecord.current = []
         setRecord([])
         setGraphEdges([])
       } else {return}
     } else if (currentStructure === "array") {
       if (window.confirm("This will delete all existing records. \n\nContinue?")) {
+        tempRecord.current = []
         setRecord([])
       } else {return}
     }
