@@ -3,9 +3,10 @@ import Button from 'react-bootstrap/Button'
 import Draggable from 'react-draggable'
 
 const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, clearCanvas, showRecord, displayRecord, currentStructure, selectStructure, addGraphEdge }) => {
+    const nodeRef = React.useRef(null)
     return (
-        <Draggable bounds="body">
-            <div className="function-box">
+        <Draggable bounds="body" nodeRef={nodeRef}>
+            <div className="function-box" ref={nodeRef}>
                 <h3>Data Structures</h3>
                 <Button className="btn-dark function-box-button" onClick={() => selectStructure('array')}>Array</Button>
                 <Button className="btn-dark function-box-button" onClick={() => selectStructure('graph')}>Graph</Button>
