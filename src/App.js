@@ -15,7 +15,10 @@ function App() {
   const [selectedRecord, setSelectedRecord] = useState("") //only one record can be selected at a time
   const [graphEdges, setGraphEdges] = useState([])
   const tempRecord = useRef([]) //tempRecord is actively updated during algorithm execution, and then is used to update the record state
-
+  const algoState = useRef({
+    states: [],
+    currentIndex: 0
+  })
 
   const addElement = () => {
     if (currentStructure === "") {
@@ -83,6 +86,7 @@ function App() {
         updateTempRecord(`The leftmost element greater than the pivot is: ${elements[lp].value}
          \nThe rightmost element less than the pivot is: ${elements[rp].value}`); //semicolon necessary
         [elements[lp], elements[rp]] = [elements[rp], elements[lp]]
+        saveAlgoState()
         setElements([...elements]) //Need to spread the array to trigger re-render
         lp++
         rp--
@@ -90,6 +94,7 @@ function App() {
     }
     if (lp > pivotIndex) {
       updateTempRecord(`Value at pivot is largest in passed subarray. The pivot element will remain at its current index`)
+      saveAlgoState()
       setElements([...elements])       
       quickSort(start, end - 1)
     } else if (rp < 0) {
@@ -97,18 +102,31 @@ function App() {
       swapped with the leftmost element in the passed subarray ${elements[start].value}`)
       const newPivotIndex = start;
       [elements[start], elements[pivotIndex]] = [elements[pivotIndex], elements[start]]
+      saveAlgoState()
       setElements([...elements])
       quickSort(newPivotIndex + 1, end)
     } else {
       updateTempRecord(`Swapping pivot ${elements[pivotIndex].value} with element at left pointer ${elements[lp].value}`)
       const newPivotIndex = lp;
       [elements[lp], elements[pivotIndex]] = [elements[pivotIndex],elements[lp]]
+      saveAlgoState()
       setElements([...elements])
       quickSort(0, newPivotIndex - 1)
       quickSort(newPivotIndex + 1, end)
     }
   }
 
+  const deepCopyElements = () => {
+    return elements.map(elem => ({...elem}))
+  }
+
+  const saveAlgoState = () => {
+    const data = deepCopyElements()
+    algoState.current = {
+      states:[...algoState.current.states, data],
+      currentIndex: 0
+    }
+  }
 
   const clearCanvas = () => {
     if (window.confirm("This will delete all elements in the canvas and the record. \n\nContinue?")) {
@@ -191,6 +209,10 @@ function App() {
     return (a.length === b.length) && a.every((v, i) => v === b[i])
   }
 
+  const showDetailedExe = () => {
+
+  }
+
   return (
     <div className="App">
       <Navigation/>
@@ -207,6 +229,7 @@ function App() {
       selectStructure={selectStructure}
       graphEdges={graphEdges}
       addGraphEdge={addGraphEdge}
+      showDetailedExe={showDetailedExe}
       />
       <Record
       displayRecord={displayRecord} 

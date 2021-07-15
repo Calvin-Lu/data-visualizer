@@ -14,6 +14,7 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                 <Button className="function-box-button" onClick={addElement}>+ Add Element</Button>
                 <Button className="btn-danger function-box-button" onClick={deleteSelectedElements}>- Delete Selected Elements</Button>
                 <Button className="btn-danger function-box-button" onClick={clearCanvas}>Clear Canvas and Record</Button>
+                <Button className="btn-info function-box-button">View Step-by-Step Execution</Button>
                 <Button className="btn-info function-box-button" onClick={showRecord}>{displayRecord ? "Hide Record" : "Show Record"}</Button>
                 {currentStructure === "graph" ? 
                 <Button className="btn-warning function-box-button" onClick={addGraphEdge}>Create Graph Edge</Button>  
