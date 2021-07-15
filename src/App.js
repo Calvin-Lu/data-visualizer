@@ -7,8 +7,10 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { v4 as uuidv4 } from 'uuid'
 
 function App() {
-  const [currentStructure, setCurrentStructure]=useState('') //keeps track of selected data structure
+  const [currentStructure, setCurrentStructure] = useState('none') //keeps track of selected data structure
+  const [currentAlgorithm, setCurrentAlgorithm] = useState('none') //keeps track of selected algorithm
   const [elements, setElements] = useState([])
+  const [tempElements, setTempElements] = useState([])
   const [selectedElements, setSelectedElements] = useState([])
   const [record, setRecord] = useState([])
   const [displayRecord, setDisplayRecord] = useState(false) //tracks whether record interface is visible
@@ -17,31 +19,42 @@ function App() {
   const tempRecord = useRef([]) //tempRecord is actively updated during algorithm execution, and then is used to update the record state
   const algoState = useRef({
     states: [],
-    currentIndex: 0
+    currentStep: 0
   })
 
   const addElement = () => {
-    if (currentStructure === "") {
+    if (currentStructure === "none") {
       alert("Please select a data structure before attempting to add an element.")
       return
     }
     const userInput = prompt("Multiple values must be separated by commas. \n\nPlease input one or more numerical values for the new element(s):")
     const inputtedValues = userInput.split(",")
-    const temp = []
+    const tempArray = [] //stores new elements
+    const tempArray2 = [] //stores new temp elements
     for (let i = 0; i < inputtedValues.length; i++) {
 
       if (isNaN(inputtedValues[i])) {
         alert("Invalid input: Input can only contain numbers and commas")
         return
       }
+      const originalId = uuidv4()
+      const tempElementId = uuidv4()
       const newElement = {
         value: Number(inputtedValues[i]),
-        id: uuidv4(),
+        id: originalId,
         selected:false
       }
-      temp.push(newElement)   //calling setElements inside the for loop would result in only the last element being appended
+      const newTempElement = {
+        value: Number(inputtedValues[i]),
+        originalId: originalId,
+        id: tempElementId,
+        selected:false
+      }
+      tempArray.push(newElement)   //calling setElements inside the for loop would result in only the last element being appended
+      tempArray2.push(newTempElement)
     }
-    setElements([...elements, ...temp])
+    setElements([...elements, ...tempArray])
+    setTempElements([...tempElements, ...tempArray2])
   }
 
   const selectElement = (id) => {
@@ -63,69 +76,91 @@ function App() {
     if ((end-start) < 1) { //subarray of length 1
       return
     }
-    const pivot = elements[end]
+    const pivot = tempElements[end]
     const pivotIndex = end
     let lp = start
     let rp = end - 1
-    updateTempRecord(`The current subarray is [${elements.slice(start, end + 1).map((element) => element.value)}]`)
-    updateTempRecord(`The pivot is the last element: ${pivot.value}`)
+    updateTempRecord(`NEW PROCESSING SUBARRAY: The current subarray is [${tempElements.slice(start, end + 1).map((element) => element.value)}]`)
+    updateTempRecord(`NEW PIVOT: The pivot is the last element: ${pivot.value}`)
     while (lp <= rp) {
-      while (elements[lp].value <= pivot.value && lp <= pivotIndex) {
+      while (tempElements[lp].value <= pivot.value && lp <= pivotIndex) {
         lp++
         if (lp > pivotIndex) { //prevent invalid reference
           break
         }
       }
-      while (elements[rp].value > pivot.value && rp >= start && rp >= lp) {
+      while (tempElements[rp].value > pivot.value && rp >= start && rp >= lp) {
         rp--
         if (rp < 0) { //prevent invalid reference
           break
         }
       }
       if (!(lp > pivotIndex || rp < 0 || lp > rp)) {
-        updateTempRecord(`The leftmost element greater than the pivot is: ${elements[lp].value}
-         \nThe rightmost element less than the pivot is: ${elements[rp].value}`); //semicolon necessary
-        [elements[lp], elements[rp]] = [elements[rp], elements[lp]]
+        updateTempRecord(`SWAPPING THESE ELEMENTS:
+        \nThe leftmost element greater than the pivot is: ${tempElements[lp].value}.
+        \nThe rightmost element less than the pivot is: ${tempElements[rp].value}.`); //semicolon necessary
+        [tempElements[lp], tempElements[rp]] = [tempElements[rp], tempElements[lp]]
         saveAlgoState()
-        setElements([...elements]) //Need to spread the array to trigger re-render
+        setTempElements([...tempElements]) //Need to spread the array to trigger re-render
         lp++
         rp--
       }
     }
     if (lp > pivotIndex) {
-      updateTempRecord(`Value at pivot is largest in passed subarray. The pivot element will remain at its current index`)
+      updateTempRecord(`PIVOT ALREADY AT CORRECT INDEX: Value at pivot is largest in passed subarray. The pivot element will remain at its current index`)
       saveAlgoState()
-      setElements([...elements])       
+      setTempElements([...tempElements])       
       quickSort(start, end - 1)
     } else if (rp < 0) {
-      updateTempRecord(`Value at pivot is smallest in passed subarray. The pivot element will be 
-      swapped with the leftmost element in the passed subarray ${elements[start].value}`)
+      updateTempRecord(`SWAPPING PIVOT AND LEFTMOST ELEMENT: Value at pivot is smallest in passed subarray. The pivot element will be 
+      swapped with the leftmost element in the passed subarray ${tempElements[start].value}`)
       const newPivotIndex = start;
-      [elements[start], elements[pivotIndex]] = [elements[pivotIndex], elements[start]]
+      [tempElements[start], tempElements[pivotIndex]] = [tempElements[pivotIndex], tempElements[start]]
       saveAlgoState()
-      setElements([...elements])
+      setTempElements([...tempElements])
       quickSort(newPivotIndex + 1, end)
     } else {
-      updateTempRecord(`Swapping pivot ${elements[pivotIndex].value} with element at left pointer ${elements[lp].value}`)
+      updateTempRecord(`SWAPPING PIVOT TO CORRECT INDEX: Swapping pivot ${tempElements[pivotIndex].value} with element at left pointer ${tempElements[lp].value}`)
       const newPivotIndex = lp;
-      [elements[lp], elements[pivotIndex]] = [elements[pivotIndex],elements[lp]]
+      [tempElements[lp], tempElements[pivotIndex]] = [tempElements[pivotIndex],tempElements[lp]]
       saveAlgoState()
-      setElements([...elements])
+      setTempElements([...tempElements])
       quickSort(0, newPivotIndex - 1)
       quickSort(newPivotIndex + 1, end)
     }
   }
 
-  const deepCopyElements = () => {
-    return elements.map(elem => ({...elem}))
+  const deepCopyArrayOfObjects = (data) => {
+    return data.map(elem => ({...elem}))
   }
 
   const saveAlgoState = () => {
-    const data = deepCopyElements()
+    const data = deepCopyArrayOfObjects(tempElements)
     algoState.current = {
       states:[...algoState.current.states, data],
-      currentIndex: 0
+      currentStep: 0
     }
+  }
+
+  const showNextStep = () => {
+    const temp = []
+    const tempCurrentStep = algoState.current.currentStep
+    if (tempCurrentStep >= algoState.current.states.length) {
+      alert("Algorithm already complete")
+      return
+    }
+    for (let i = 0; i < algoState.current.states[tempCurrentStep].length; i++) {
+      const currentStateElements = algoState.current.states[tempCurrentStep]
+      const newElement = {
+        value: currentStateElements[i].value,
+        id: currentStateElements[i].originalId,
+        selected: currentStateElements[i].selected
+      }
+      temp.push(newElement)
+    }
+    setElements(temp)
+    selectRecord(record[tempCurrentStep].id) //highlights the record corresponding to the current algorithm step
+    algoState.current.currentStep++
   }
 
   const clearCanvas = () => {
@@ -209,10 +244,6 @@ function App() {
     return (a.length === b.length) && a.every((v, i) => v === b[i])
   }
 
-  const showDetailedExe = () => {
-
-  }
-
   return (
     <div className="App">
       <Navigation/>
@@ -229,7 +260,9 @@ function App() {
       selectStructure={selectStructure}
       graphEdges={graphEdges}
       addGraphEdge={addGraphEdge}
-      showDetailedExe={showDetailedExe}
+      currentAlgorithm={currentAlgorithm}
+      setCurrentAlgorithm={setCurrentAlgorithm}
+      showNextStep={showNextStep}
       />
       <Record
       displayRecord={displayRecord} 
