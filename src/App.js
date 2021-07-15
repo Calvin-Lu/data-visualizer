@@ -19,7 +19,7 @@ function App() {
   const tempRecord = useRef([]) //tempRecord is actively updated during algorithm execution, and then is used to update the record state
   const algoState = useRef({
     states: [],
-    currentStep: 0
+    currentState: 0
   })
 
   const addElement = () => {
@@ -81,7 +81,9 @@ function App() {
     let lp = start
     let rp = end - 1
     updateTempRecord(`NEW PROCESSING SUBARRAY: The current subarray is [${tempElements.slice(start, end + 1).map((element) => element.value)}]`)
+    saveAlgoState()
     updateTempRecord(`NEW PIVOT: The pivot is the last element: ${pivot.value}`)
+    saveAlgoState()
     while (lp <= rp) {
       while (tempElements[lp].value <= pivot.value && lp <= pivotIndex) {
         lp++
@@ -98,9 +100,9 @@ function App() {
       if (!(lp > pivotIndex || rp < 0 || lp > rp)) {
         updateTempRecord(`SWAPPING THESE ELEMENTS:
         \nThe leftmost element greater than the pivot is: ${tempElements[lp].value}.
-        \nThe rightmost element less than the pivot is: ${tempElements[rp].value}.`); //semicolon necessary
+        \nThe rightmost element less than the pivot is: ${tempElements[rp].value}.`); 
+        saveAlgoState(); //semicolon necessary
         [tempElements[lp], tempElements[rp]] = [tempElements[rp], tempElements[lp]]
-        saveAlgoState()
         setTempElements([...tempElements]) //Need to spread the array to trigger re-render
         lp++
         rp--
@@ -114,16 +116,16 @@ function App() {
     } else if (rp < 0) {
       updateTempRecord(`SWAPPING PIVOT AND LEFTMOST ELEMENT: Value at pivot is smallest in passed subarray. The pivot element will be 
       swapped with the leftmost element in the passed subarray ${tempElements[start].value}`)
+      saveAlgoState()
       const newPivotIndex = start;
       [tempElements[start], tempElements[pivotIndex]] = [tempElements[pivotIndex], tempElements[start]]
-      saveAlgoState()
       setTempElements([...tempElements])
       quickSort(newPivotIndex + 1, end)
     } else {
       updateTempRecord(`SWAPPING PIVOT TO CORRECT INDEX: Swapping pivot ${tempElements[pivotIndex].value} with element at left pointer ${tempElements[lp].value}`)
+      saveAlgoState()
       const newPivotIndex = lp;
       [tempElements[lp], tempElements[pivotIndex]] = [tempElements[pivotIndex],tempElements[lp]]
-      saveAlgoState()
       setTempElements([...tempElements])
       quickSort(0, newPivotIndex - 1)
       quickSort(newPivotIndex + 1, end)
@@ -138,19 +140,19 @@ function App() {
     const data = deepCopyArrayOfObjects(tempElements)
     algoState.current = {
       states:[...algoState.current.states, data],
-      currentStep: 0
+      currentState: 0
     }
   }
 
   const showNextStep = () => {
     const temp = []
-    const tempCurrentStep = algoState.current.currentStep
-    if (tempCurrentStep >= algoState.current.states.length) {
+    let tempCurrentState = algoState.current.currentState
+    if (tempCurrentState >= algoState.current.states.length) {
       alert("Algorithm already complete")
       return
     }
-    for (let i = 0; i < algoState.current.states[tempCurrentStep].length; i++) {
-      const currentStateElements = algoState.current.states[tempCurrentStep]
+    const currentStateElements = algoState.current.states[tempCurrentState]
+    for (let i = 0; i < algoState.current.states[tempCurrentState].length; i++) {
       const newElement = {
         value: currentStateElements[i].value,
         id: currentStateElements[i].originalId,
@@ -159,8 +161,8 @@ function App() {
       temp.push(newElement)
     }
     setElements(temp)
-    selectRecord(record[tempCurrentStep].id) //highlights the record corresponding to the current algorithm step
-    algoState.current.currentStep++
+    selectRecord(record[tempCurrentState].id) //highlights the record corresponding to the current algorithm step
+    algoState.current.currentState++
   }
 
   const clearCanvas = () => {
