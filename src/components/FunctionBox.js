@@ -24,7 +24,7 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                     onClick={() => {
                         resetAlgoState()
                         quickSort(0, elements.length - 1)
-                        showRecord()
+                        if (!displayRecord) {showRecord()}
                         setCurrentAlgorithm('quicksort')}}>
                     Apply Quick Sort
                 </Button>
