@@ -144,6 +144,13 @@ function App() {
     }
   }
 
+  const resetAlgoState = () => {
+    algoState.current = {
+      states:[],
+      currentState:0
+    }
+  }
+
   const showNextStep = () => {
     const temp = []
     let tempCurrentState = algoState.current.currentState
@@ -206,19 +213,24 @@ function App() {
   }
 
   const selectStructure = (dataStructure) => {
-    if (currentStructure === "graph") {
-      if (window.confirm("This will delete all existing records and graph edges. \n\nContinue?")) {
-        tempRecord.current = []
-        setRecord([])
-        setGraphEdges([])
-      } else {return}
-    } else if (currentStructure === "array") {
-      if (window.confirm("This will delete all existing records. \n\nContinue?")) {
-        tempRecord.current = []
-        setRecord([])
+    if (!(currentStructure === "none")) {
+      if (window.confirm("This will delete all existing records and elements. \n\nContinue?")) {
+        resetAllStates()
+        setCurrentStructure(dataStructure)
       } else {return}
     }
     setCurrentStructure(dataStructure)
+  }
+
+  const resetAllStates = () => {
+    tempRecord.current = []
+    setRecord([])
+    setGraphEdges([])
+    resetAlgoState()
+    setElements([])
+    setTempElements([])
+    setCurrentStructure("none")
+    setCurrentAlgorithm("none")
   }
 
   const addGraphEdge = () => {
@@ -265,6 +277,7 @@ function App() {
       currentAlgorithm={currentAlgorithm}
       setCurrentAlgorithm={setCurrentAlgorithm}
       showNextStep={showNextStep}
+      resetAlgoState={resetAlgoState}
       />
       <Record
       displayRecord={displayRecord} 

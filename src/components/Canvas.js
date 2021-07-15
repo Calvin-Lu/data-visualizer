@@ -4,7 +4,7 @@ import '../index.css'
 import FunctionBox from './FunctionBox'
 import LineTo from 'react-lineto'
 
-const Canvas = ({elements, selectElement,  addElement, deleteSelectedElements, quickSort, clearCanvas, showRecord, displayRecord, currentStructure, selectStructure, graphEdges, addGraphEdge, currentAlgorithm, setCurrentAlgorithm, showNextStep} ) => {
+const Canvas = ({elements, selectElement,  addElement, deleteSelectedElements, quickSort, clearCanvas, showRecord, displayRecord, currentStructure, selectStructure, graphEdges, addGraphEdge, currentAlgorithm, setCurrentAlgorithm, showNextStep, resetAlgoState} ) => {
     return (
         <div className={displayRecord ? "canvas" : "canvas canvas-record-hidden"}>
             <h1>
@@ -31,6 +31,7 @@ const Canvas = ({elements, selectElement,  addElement, deleteSelectedElements, q
             addGraphEdge={addGraphEdge}
             setCurrentAlgorithm={setCurrentAlgorithm}
             showNextStep={showNextStep}
+            resetAlgoState={resetAlgoState}
             />
         </div>
     )

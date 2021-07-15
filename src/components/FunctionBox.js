@@ -2,7 +2,7 @@ import React from 'react'
 import Button from 'react-bootstrap/Button'
 import Draggable from 'react-draggable'
 
-const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, clearCanvas, showRecord, displayRecord, currentStructure, selectStructure, addGraphEdge, setCurrentAlgorithm, showNextStep }) => {
+const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, clearCanvas, showRecord, displayRecord, currentStructure, selectStructure, addGraphEdge, setCurrentAlgorithm, showNextStep, resetAlgoState }) => {
     const nodeRef = React.useRef(null)
     return (
         <Draggable bounds="body" nodeRef={nodeRef}>
@@ -22,6 +22,7 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                 {currentStructure ==="array" ?
                 <Button className="btn-success function-box-button" 
                     onClick={() => {
+                        resetAlgoState()
                         quickSort(0, elements.length - 1)
                         showRecord()
                         setCurrentAlgorithm('quicksort')}}>
