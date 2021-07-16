@@ -172,9 +172,6 @@ function App() {
       }
     }
     const currentStateElements = algoState.current.states[tempCurrentState]
-    console.log(tempCurrentState)
-    console.log(algoState.current.states.length)
-    console.log("=====")
     for (let i = 0; i < algoState.current.states[tempCurrentState].length; i++) {
       const newElement = {
         value: currentStateElements[i].value,
