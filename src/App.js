@@ -19,7 +19,7 @@ function App() {
   const tempRecord = useRef([]) //tempRecord is actively updated during algorithm execution, and then is used to update the record state
   const algoState = useRef({
     states: [],
-    currentState: 0
+    currentState: -1
   })
 
   const addElement = () => {
@@ -140,25 +140,41 @@ function App() {
     const data = deepCopyArrayOfObjects(tempElements)
     algoState.current = {
       states:[...algoState.current.states, data],
-      currentState: 0
+      currentState: -1
     }
   }
 
   const resetAlgoState = () => {
     algoState.current = {
       states:[],
-      currentState:0
+      currentState:-1
     }
   }
 
-  const showNextStep = () => {
+  const showStep = (goNext) => {
     const temp = []
     let tempCurrentState = algoState.current.currentState
-    if (tempCurrentState >= algoState.current.states.length) {
-      alert("Algorithm already complete")
-      return
+    if (goNext) {
+      if (tempCurrentState >= (algoState.current.states.length - 1)) { //- 1 ensures currentState isn't incremented out of index range
+        alert("Algorithm is already complete.")
+        return
+      } else {
+        algoState.current.currentState++
+        tempCurrentState = algoState.current.currentState
+      }
+    } else {
+      if (tempCurrentState < 1) {
+        alert("Currently at the beginning of the algorithm.")
+        return
+      } else {
+        algoState.current.currentState--
+        tempCurrentState = algoState.current.currentState
+      }
     }
     const currentStateElements = algoState.current.states[tempCurrentState]
+    console.log(tempCurrentState)
+    console.log(algoState.current.states.length)
+    console.log("=====")
     for (let i = 0; i < algoState.current.states[tempCurrentState].length; i++) {
       const newElement = {
         value: currentStateElements[i].value,
@@ -169,8 +185,8 @@ function App() {
     }
     setElements(temp)
     selectRecord(record[tempCurrentState].id) //highlights the record corresponding to the current algorithm step
-    algoState.current.currentState++
   }
+
 
   const clearCanvas = () => {
     if (window.confirm("This will delete all elements in the canvas and the record. \n\nContinue?")) {
@@ -276,7 +292,7 @@ function App() {
       addGraphEdge={addGraphEdge}
       currentAlgorithm={currentAlgorithm}
       setCurrentAlgorithm={setCurrentAlgorithm}
-      showNextStep={showNextStep}
+      showStep={showStep}
       resetAlgoState={resetAlgoState}
       />
       <Record
