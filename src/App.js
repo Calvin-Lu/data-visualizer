@@ -22,6 +22,10 @@ function App() {
     currentState: -1
   })
 
+  /**
+   *  Adds a new element to the 'elements' state, and a near identical copy of
+   *  the element to the 'tempElements' state.
+   */
   const addElement = () => {
     if (currentStructure === "none") {
       alert("Please select a data structure before attempting to add an element.")
@@ -44,7 +48,7 @@ function App() {
         id: originalId,
         selected:false
       }
-      const newTempElement = {
+      const newTempElement = { // copy of newElement, whose data is first modified by user selected algorithms
         value: Number(inputtedValues[i]),
         originalId: originalId,
         id: tempElementId,
@@ -57,6 +61,12 @@ function App() {
     setTempElements([...tempElements, ...tempArray2])
   }
 
+  /**
+   * Toggles the 'selected' property of the element with id property equal to 
+   * 'id' parameter, and appends or removes 'id' from the 'selectedElements' 
+   * state.
+   * @param {String} id 
+   */
   const selectElement = (id) => {
     if (!selectedElements.includes(id)) {
       elements.find((element) => element.id === id).selected = true
@@ -130,6 +140,49 @@ function App() {
       quickSort(0, newPivotIndex - 1)
       quickSort(newPivotIndex + 1, end)
     }
+  }
+
+  const depthFirstSearch = () => {
+    const start=elements[0]
+    let stack = []
+    let visited = new Set()
+    const graphEdgesCopy = deepCopy2DArray(graphEdges)
+    stack.push(start)
+    visited.add(start.id)
+    while (stack.length > 0) {
+      let currentNode = stack.pop()
+      console.log('Current Node:')
+      console.log(currentNode.value)
+      const edgesContainingNode = graphEdgesCopy.filter(n => n.indexOf(currentNode.id) !== -1)
+      const adjacentNodes = edgesContainingNode.map(edge => {
+        edge.splice(edge.indexOf(currentNode.id), 1)
+        return edge
+      })
+      const unvisitedAdjacentNodes = []
+      for (let i = 0; i < adjacentNodes.length; i++) {
+        if (!visited.has(adjacentNodes[i][0])) {
+          unvisitedAdjacentNodes.push(adjacentNodes[i][0])
+        }
+      }
+      for (let i = 0; i < unvisitedAdjacentNodes.length; i++) {
+        for (let j = 0; j < elements.length; j++) {
+          if (unvisitedAdjacentNodes[i] === elements[j].id) {
+            if (stack.indexOf(elements[j]) === -1) {
+              stack.push(elements[j])
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+  const deepCopy2DArray = (data) => {
+    const result = []
+    for (let i = 0; i < data.length; i++) {
+      result.push([...data[i]])
+    }
+    return result
   }
 
   const deepCopyArrayOfObjects = (data) => {
@@ -291,6 +344,7 @@ function App() {
       setCurrentAlgorithm={setCurrentAlgorithm}
       showStep={showStep}
       resetAlgoState={resetAlgoState}
+      depthFirstSearch={depthFirstSearch}
       />
       <Record
       displayRecord={displayRecord} 
