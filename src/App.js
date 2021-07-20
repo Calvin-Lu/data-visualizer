@@ -19,6 +19,7 @@ function App() {
   const tempRecord = useRef([]) //tempRecord is actively updated during algorithm execution, and then is used to update the record state
   const algoState = useRef({
     states: [],
+    relevantElements: [],
     currentState: -1
   })
 
@@ -46,13 +47,15 @@ function App() {
       const newElement = {
         value: Number(inputtedValues[i]),
         id: originalId,
-        selected:false
+        selected:false,
+        highlighted:false
       }
       const newTempElement = { // copy of newElement, whose data is first modified by user selected algorithms
         value: Number(inputtedValues[i]),
         originalId: originalId,
         id: tempElementId,
-        selected:false
+        selected:false,
+        highlighted:false
       }
       tempArray.push(newElement)   //calling setElements inside the for loop would result in only the last element being appended
       tempArray2.push(newTempElement)
@@ -91,9 +94,9 @@ function App() {
     let lp = start
     let rp = end - 1
     updateTempRecord(`NEW PROCESSING SUBARRAY: The current subarray is [${tempElements.slice(start, end + 1).map((element) => element.value)}]`)
-    saveAlgoState()
-    updateTempRecord(`NEW PIVOT: The pivot is the last element: ${pivot.value}`)
-    saveAlgoState()
+    saveAlgoState(tempElements.slice(start, end + 1).map((element) => element.originalId))
+    updateTempRecord(`NEW PIVOT: The pivot is the last element in the subarray: ${pivot.value}`)
+    saveAlgoState([pivot.originalId])
     while (lp <= rp) {
       while (tempElements[lp].value <= pivot.value && lp <= pivotIndex) {
         lp++
@@ -111,7 +114,7 @@ function App() {
         updateTempRecord(`SWAPPING THESE ELEMENTS:
         \nThe leftmost element greater than the pivot is: ${tempElements[lp].value}.
         \nThe rightmost element less than the pivot is: ${tempElements[rp].value}.`); 
-        saveAlgoState(); //semicolon necessary
+        saveAlgoState([tempElements[lp].originalId, tempElements[rp].originalId]); //semicolon necessary
         [tempElements[lp], tempElements[rp]] = [tempElements[rp], tempElements[lp]]
         setTempElements([...tempElements]) //Need to spread the array to trigger re-render
         lp++
@@ -119,21 +122,21 @@ function App() {
       }
     }
     if (lp > pivotIndex) {
-      updateTempRecord(`PIVOT ALREADY AT CORRECT INDEX: Value at pivot is largest in passed subarray. The pivot element will remain at its current index`)
-      saveAlgoState()
+      updateTempRecord(`PIVOT IS ALREADY AT CORRECT INDEX: Value at pivot is largest in passed subarray. The pivot element will remain at its current index`)
+      saveAlgoState([pivot.originalId])
       setTempElements([...tempElements])       
       quickSort(start, end - 1)
     } else if (rp < 0) {
       updateTempRecord(`SWAPPING PIVOT AND LEFTMOST ELEMENT: Value at pivot is smallest in passed subarray. The pivot element will be 
       swapped with the leftmost element in the passed subarray ${tempElements[start].value}`)
-      saveAlgoState()
+      saveAlgoState([pivot.originalId, tempElements[start].originalId])
       const newPivotIndex = start;
       [tempElements[start], tempElements[pivotIndex]] = [tempElements[pivotIndex], tempElements[start]]
       setTempElements([...tempElements])
       quickSort(newPivotIndex + 1, end)
     } else {
       updateTempRecord(`SWAPPING PIVOT TO CORRECT INDEX: Swapping pivot ${tempElements[pivotIndex].value} with element at left pointer ${tempElements[lp].value}`)
-      saveAlgoState()
+      saveAlgoState([pivot.originalId, tempElements[lp].originalId])
       const newPivotIndex = lp;
       [tempElements[lp], tempElements[pivotIndex]] = [tempElements[pivotIndex],tempElements[lp]]
       setTempElements([...tempElements])
@@ -143,7 +146,11 @@ function App() {
   }
 
   const depthFirstSearch = () => {
-    const start=elements[0]
+    if (selectedElements.length !== 1) {
+      alert("You must select exactly one element as the starting node.")
+      return
+    }
+    const start = elements.find(element => element.id === selectedElements[0])
     let stack = []
     let visited = new Set()
     const graphEdgesCopy = deepCopy2DArray(graphEdges)
@@ -189,10 +196,11 @@ function App() {
     return data.map(elem => ({...elem}))
   }
 
-  const saveAlgoState = () => {
+  const saveAlgoState = (affectedElements) => {
     const data = deepCopyArrayOfObjects(tempElements)
     algoState.current = {
       states:[...algoState.current.states, data],
+      relevantElements:[...algoState.current.relevantElements, affectedElements],
       currentState: -1
     }
   }
@@ -200,6 +208,7 @@ function App() {
   const resetAlgoState = () => {
     algoState.current = {
       states:[],
+      relevantElements:[],
       currentState:-1
     }
   }
@@ -229,7 +238,13 @@ function App() {
       const newElement = {
         value: currentStateElements[i].value,
         id: currentStateElements[i].originalId,
-        selected: currentStateElements[i].selected
+        selected: currentStateElements[i].selected,
+        highlighted: currentStateElements[i].highlighted
+      }
+      if (algoState.current.relevantElements[tempCurrentState].indexOf(newElement.id) !== -1) {
+        newElement.highlighted = true
+      } else {
+        newElement.highlighted = false
       }
       temp.push(newElement)
     }

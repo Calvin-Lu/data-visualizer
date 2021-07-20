@@ -64,6 +64,10 @@ code {
   border:solid 5px red;
 }
 
+.highlighted-element {
+  border:solid 5px green;
+}
+
 .record {
   min-height:25vh;
   max-height:25vh;

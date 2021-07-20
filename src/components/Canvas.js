@@ -12,7 +12,7 @@ const Canvas = ({elements, selectElement,  addElement, deleteSelectedElements, q
                     Current Algorithm: ${currentAlgorithm}`}
             </h1>
             {elements.map((element) => (
-                <Element key={element.id} id={element.id} value={element.value} selected={element.selected} selectElement={selectElement} currentStructure={currentStructure}/>
+                <Element key={element.id} id={element.id} value={element.value} selected={element.selected} highlighted={element.highlighted} selectElement={selectElement} currentStructure={currentStructure}/>
             ))}
             {graphEdges.map((edge) => (
                 <LineTo from={edge[0]} to={edge[1]} borderWidth={2} borderColor="black" zIndex={1} delay={100}/>
