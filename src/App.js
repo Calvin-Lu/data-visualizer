@@ -158,8 +158,6 @@ function App() {
     visited.add(start.id)
     while (stack.length > 0) {
       let currentNode = stack.pop()
-      console.log('Current Node:')
-      console.log(currentNode.value)
       const edgesContainingNode = graphEdgesCopy.filter(n => n.indexOf(currentNode.id) !== -1)
       const adjacentNodes = edgesContainingNode.map(edge => {
         edge.splice(edge.indexOf(currentNode.id), 1)
@@ -180,6 +178,8 @@ function App() {
           }
         }
       }
+      updateTempRecord(`Current Node is ${currentNode.value}. Stack: ${stack.map((element) => element.value)}`)
+      saveAlgoState(currentNode.id)
     }
 
   }

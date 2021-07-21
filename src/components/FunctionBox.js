@@ -31,7 +31,13 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                 : null}
                 {currentStructure ==="graph" ?
                 <Button className="btn-success function-box-button"
-                    onClick={() => depthFirstSearch()}>
+                    onClick={() => {
+                        resetAlgoState()
+                        depthFirstSearch()
+                        if (!displayRecord) {showRecord()}
+                        setCurrentAlgorithm('DFS')
+
+                    }}>
                     Depth First Search
                 </Button>
                 : null}
