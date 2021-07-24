@@ -309,6 +309,7 @@ function App() {
     setElements([])
     setTempElements([])
     setSelectedRecord("")
+    setDisplayRecord(false)
     setCurrentStructure("none")
     setCurrentAlgorithm("none")
   }
