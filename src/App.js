@@ -255,10 +255,7 @@ function App() {
 
   const clearCanvas = () => {
     if (window.confirm("This will delete all data in the canvas and record. \n\nContinue?")) {
-      setElements([])
-      setRecord([])
-      setGraphEdges([])
-      resetAlgoState()
+      resetAllStates()
     }
   }
 
@@ -311,6 +308,7 @@ function App() {
     resetAlgoState()
     setElements([])
     setTempElements([])
+    setSelectedRecord("")
     setCurrentStructure("none")
     setCurrentAlgorithm("none")
   }
