@@ -263,7 +263,7 @@ function App() {
     tempRecord.current = [...tempRecord.current, text]
   }
 
-  const showRecord = () => {
+  const toggleRecord = () => {
     setDisplayRecord(!displayRecord)
     const newRecordArray = []
     for (let i = 0; i < tempRecord.current.length; i++) {
@@ -348,7 +348,7 @@ function App() {
       deleteSelectedElements={deleteSelectedElements}
       quickSort={quickSort}
       clearCanvas={clearCanvas}
-      showRecord={showRecord}
+      toggleRecord={toggleRecord}
       displayRecord={displayRecord}
       currentStructure={currentStructure}
       selectStructure={selectStructure}

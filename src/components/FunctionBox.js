@@ -2,7 +2,7 @@ import React from 'react'
 import Button from 'react-bootstrap/Button'
 import Draggable from 'react-draggable'
 
-const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, clearCanvas, showRecord, displayRecord, currentStructure, selectStructure, addGraphEdge, setCurrentAlgorithm, showStep, resetAlgoState, depthFirstSearch }) => {
+const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, clearCanvas, toggleRecord, displayRecord, currentStructure, selectStructure, addGraphEdge, setCurrentAlgorithm, showStep, resetAlgoState, depthFirstSearch }) => {
     const nodeRef = React.useRef(null)
     return (
         <Draggable bounds="body" nodeRef={nodeRef}>
@@ -14,7 +14,7 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                 <Button className="function-box-button" onClick={addElement}>+ Add Element</Button>
                 <Button className="btn-danger function-box-button" onClick={deleteSelectedElements}>- Delete Selected Elements</Button>
                 <Button className="btn-danger function-box-button" onClick={clearCanvas}>Clear Canvas and Record</Button>
-                <Button className="btn-info function-box-button" onClick={showRecord}>{displayRecord ? "Hide Record" : "Show Record"}</Button>
+                <Button className="btn-info function-box-button" onClick={toggleRecord}>{displayRecord ? "Hide Record" : "Show Record"}</Button>
                 {currentStructure === "graph" ? 
                 <Button className="btn-warning function-box-button" onClick={addGraphEdge}>Create Graph Edge</Button>  
                 : null}                
@@ -24,7 +24,7 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                     onClick={() => {
                         resetAlgoState()
                         quickSort(0, elements.length - 1)
-                        if (!displayRecord) {showRecord()}
+                        if (!displayRecord) {toggleRecord()}
                         setCurrentAlgorithm('quicksort')}}>
                     Apply Quick Sort
                 </Button>
@@ -34,7 +34,7 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                     onClick={() => {
                         resetAlgoState()
                         depthFirstSearch()
-                        if (!displayRecord) {showRecord()}
+                        if (!displayRecord) {toggleRecord()}
                         setCurrentAlgorithm('DFS')
 
                     }}>
