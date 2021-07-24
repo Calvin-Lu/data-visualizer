@@ -178,7 +178,7 @@ function App() {
           }
         }
       }
-      updateTempRecord(`Current Node is ${currentNode.value}. Stack: ${stack.map((element) => element.value)}`)
+      updateTempRecord(`CURRENT NODE: ${currentNode.value}, STACK: ${stack.map((element) => element.value)}`)
       saveAlgoState(currentNode.id)
     }
 
@@ -254,10 +254,11 @@ function App() {
 
 
   const clearCanvas = () => {
-    if (window.confirm("This will delete all elements in the canvas and the record. \n\nContinue?")) {
+    if (window.confirm("This will delete all data in the canvas and record. \n\nContinue?")) {
       setElements([])
       setRecord([])
       setGraphEdges([])
+      resetAlgoState()
     }
   }
 
