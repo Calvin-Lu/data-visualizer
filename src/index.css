@@ -108,3 +108,11 @@ code {
   margin-top:5px;
   margin-bottom:5px;
 }
+
+.function-box-button-header {
+  font-size:16px;
+}
+
+.function-box-button-subtitle {
+  font-size:11px;
+}
