@@ -33,6 +33,9 @@ function App() {
       return
     }
     const userInput = prompt("Multiple values must be separated by commas. \n\nPlease input one or more numerical values for the new element(s):")
+    if (userInput === null) {
+      return
+    }
     const inputtedValues = userInput.split(",")
     const tempArray = [] //stores new elements
     const tempArray2 = [] //stores new temp elements
