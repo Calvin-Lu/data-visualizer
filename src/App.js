@@ -199,6 +199,11 @@ function App() {
     return data.map(elem => ({...elem}))
   }
 
+  const updateAlgoStateEnd = () => {
+    updateTempRecord("ALGORITHM COMPLETED")
+    saveAlgoState(elements.map((elem) => elem.id))
+  }
+
   const saveAlgoState = (affectedElements) => {
     const data = deepCopyArrayOfObjects(tempElements)
     algoState.current = {
@@ -363,6 +368,7 @@ function App() {
       showStep={showStep}
       resetAlgoState={resetAlgoState}
       depthFirstSearch={depthFirstSearch}
+      updateAlgoStateEnd={updateAlgoStateEnd}
       />
       <Record
       displayRecord={displayRecord} 

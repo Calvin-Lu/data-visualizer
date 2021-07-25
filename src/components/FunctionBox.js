@@ -2,7 +2,7 @@ import React from 'react'
 import Button from 'react-bootstrap/Button'
 import Draggable from 'react-draggable'
 
-const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, clearCanvas, toggleRecord, displayRecord, currentStructure, selectStructure, addGraphEdge, setCurrentAlgorithm, showStep, resetAlgoState, depthFirstSearch }) => {
+const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, clearCanvas, toggleRecord, displayRecord, currentStructure, selectStructure, addGraphEdge, setCurrentAlgorithm, showStep, resetAlgoState, depthFirstSearch,updateAlgoStateEnd }) => {
     const nodeRef = React.useRef(null)
     return (
         <Draggable bounds="body" nodeRef={nodeRef}>
@@ -39,6 +39,7 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                         onClick={() => {
                             resetAlgoState()
                             quickSort(0, elements.length - 1)
+                            updateAlgoStateEnd()
                             if (!displayRecord) {toggleRecord()}
                             setCurrentAlgorithm('quicksort')}}>
                         Apply Quick Sort
@@ -49,6 +50,7 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                         onClick={() => {
                             resetAlgoState()
                             depthFirstSearch()
+                            updateAlgoStateEnd()
                             if (!displayRecord) {toggleRecord()}
                             setCurrentAlgorithm('DFS')
 
