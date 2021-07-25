@@ -38,8 +38,6 @@ code {
   background-color:beige;
   height:100px;
   width:100px;
-  border-radius:50%;
-  margin:0px 0px 20px 20px;
   display:flex;
   justify-content:center;
   align-content:center;
@@ -48,6 +46,15 @@ code {
   cursor:pointer;
   word-wrap:break-word;
   z-index:2;
+}
+
+.element-graph {
+  border-radius:50%;
+  margin: 0px 0px 20px 20px;
+}
+
+.element-array {
+  margin: 0px 0px 0px 0px;
 }
 
 .element-container {

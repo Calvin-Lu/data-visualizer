@@ -7,7 +7,7 @@ const Element = ({ id, value, selected, highlighted, selectElement, currentStruc
         <div className="element-container">
             { currentStructure === "graph" ?
                 <Draggable bounds="body" nodeRef={nodeRef}>
-                    <div className={`element ${selected ? "selected-element":""}
+                    <div className={`element element-graph ${selected ? "selected-element":""}
                                             ${highlighted ? "highlighted-element":""} ${id}`} 
                                     onClick={() => selectElement(id)} ref={nodeRef}>
                         <div className="element-text">{value}</div>
@@ -15,7 +15,7 @@ const Element = ({ id, value, selected, highlighted, selectElement, currentStruc
                 </Draggable>
             : null}
             { currentStructure === "array" ?
-                <div className={`element ${selected ? "selected-element":""}
+                <div className={`element element-array ${selected ? "selected-element":""}
                                         ${highlighted ? "highlighted-element":""} ${id}`} 
                                 onClick={() => selectElement(id)}>
                     <div className="element-text">{value}</div>
