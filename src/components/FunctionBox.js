@@ -59,12 +59,6 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                         <div className="function-box-button-subtitle">(Selected node is starting node)</div>
                     </Button>
                 : null}
-                <Button className="btn-warning function-box-button" onClick={() => showStep(true)}>
-                    Next Step &rarr;
-                </Button>
-                <Button className="btn-warning function-box-button" onClick={() => showStep(false)}> 
-                    &larr; Previous Step
-                </Button>
             </div>
         </Draggable>
     )

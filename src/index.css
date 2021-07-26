@@ -123,3 +123,16 @@ code {
 .function-box-button-subtitle {
   font-size:11px;
 }
+
+.control-box {
+  background-color:beige;
+  border: 3px solid black;
+  cursor:move;
+  position:absolute;
+  bottom:25vh;
+  left:42%;
+}
+
+.control-box-button {
+  margin: 10px 10px 10px 10px;
+}
