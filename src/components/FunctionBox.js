@@ -43,7 +43,8 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                             updateRecord()
                             if (!displayRecord) {toggleRecord()}
                             setCurrentAlgorithm('quicksort')}}>
-                        Apply Quick Sort
+                        <div className="function-box-button-header">Apply Quick Sort</div>
+                        <div className="function-box-button-subtitle">(Last element pivot)</div>
                     </Button>
                 : null}
                 {currentStructure ==="graph" ?
@@ -57,7 +58,7 @@ const FunctionBox = ({ addElement, deleteSelectedElements, elements, quickSort, 
                             setCurrentAlgorithm('DFS')
 
                         }}>
-                        <div className="function-box-button-header">Depth First Search</div>
+                        <div className="function-box-button-header">Apply Depth First Search</div>
                         <div className="function-box-button-subtitle">(Selected node is starting node)</div>
                     </Button>
                 : null}
