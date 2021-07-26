@@ -23,6 +23,49 @@ function App() {
     currentState: -1
   })
 
+  // UTILITY FUNCTIONS
+
+  /**
+   * Returns a clone of 'data' where the clone's array elements reference
+   * different memory locations compared to the original data.
+   * 
+   * Assumes that 'data' is a 2D array.
+   * @param {Array of Arrays} data 
+   * @returns {Array of Arrays} Deep copy of data
+   */
+   const deepCopy2DArray = (data) => {
+    const result = []
+    for (let i = 0; i < data.length; i++) {
+      result.push([...data[i]])
+    }
+    return result
+  }
+
+  /**
+   * Returns a clone of 'data' where the clone's object elements reference
+   * different memory locations compared to the original data.
+   * 
+   * Assumes that 'data' is an array of objects.
+   * @param {Array of Objects} data 
+   * @returns {Array of Objects}
+   */
+  const deepCopyArrayOfObjects = (data) => {
+    return data.map(elem => ({...elem}))
+  }
+  
+  /**
+   * Returns whether or not 'a' and 'b' are equal length, and whether or not
+   * they contain the same values regardless of memory references.
+   * @param {Array} a 
+   * @param {Array} b 
+   * @returns {Boolean} true if a and b are equivalent, false otherwise.
+   */
+   const equalArrays = (a, b) => {
+    return (a.length === b.length) && a.every((v, i) => v === b[i])
+  }
+
+  // STATE MODIFYING FUNCTIONS
+  
   /**
    *  Adds a new element to the 'elements' state, and a near identical copy of
    *  the element to the 'tempElements' state.
@@ -83,127 +126,31 @@ function App() {
     }
   }
 
+  /**
+   * Elements in the 'elements' state array are deleted if its id attribute
+   * matches an id contained in the 'selectedElements' state array.
+   */
   const deleteSelectedElements = () => {
     setElements(elements.filter((element) => !selectedElements.includes(element.id)))
     setSelectedElements([])
   }
 
-  const quickSort = (start, end) => {
-    if ((end-start) < 1) { //subarray of length 1
-      return
-    }
-    const pivot = tempElements[end]
-    const pivotIndex = end
-    let lp = start
-    let rp = end - 1
-    updateTempRecord(`NEW PROCESSING SUBARRAY: The current subarray is [${tempElements.slice(start, end + 1).map((element) => element.value)}]`)
-    saveAlgoState(tempElements.slice(start, end + 1).map((element) => element.originalId))
-    updateTempRecord(`NEW PIVOT: The pivot is the last element in the subarray: ${pivot.value}`)
-    saveAlgoState([pivot.originalId])
-    while (lp <= rp) {
-      while (tempElements[lp].value <= pivot.value && lp <= pivotIndex) {
-        lp++
-        if (lp > pivotIndex) { //prevent invalid reference
-          break
-        }
-      }
-      while (tempElements[rp].value > pivot.value && rp >= start && rp >= lp) {
-        rp--
-        if (rp < 0) { //prevent invalid reference
-          break
-        }
-      }
-      if (!(lp > pivotIndex || rp < 0 || lp > rp)) {
-        updateTempRecord(`SWAPPING THESE ELEMENTS:
-        \nThe leftmost element greater than the pivot is: ${tempElements[lp].value}.
-        \nThe rightmost element less than the pivot is: ${tempElements[rp].value}.`); 
-        saveAlgoState([tempElements[lp].originalId, tempElements[rp].originalId]); //semicolon necessary
-        [tempElements[lp], tempElements[rp]] = [tempElements[rp], tempElements[lp]]
-        setTempElements([...tempElements]) //Need to spread the array to trigger re-render
-        lp++
-        rp--
-      }
-    }
-    if (lp > pivotIndex) {
-      updateTempRecord(`PIVOT IS ALREADY AT CORRECT INDEX: Value at pivot is largest in passed subarray. The pivot element will remain at its current index`)
-      saveAlgoState([pivot.originalId])
-      setTempElements([...tempElements])       
-      quickSort(start, end - 1)
-    } else if (rp < 0) {
-      updateTempRecord(`SWAPPING PIVOT AND LEFTMOST ELEMENT: Value at pivot is smallest in passed subarray. The pivot element will be 
-      swapped with the leftmost element in the passed subarray ${tempElements[start].value}`)
-      saveAlgoState([pivot.originalId, tempElements[start].originalId])
-      const newPivotIndex = start;
-      [tempElements[start], tempElements[pivotIndex]] = [tempElements[pivotIndex], tempElements[start]]
-      setTempElements([...tempElements])
-      quickSort(newPivotIndex + 1, end)
-    } else {
-      updateTempRecord(`SWAPPING PIVOT TO CORRECT INDEX: Swapping pivot ${tempElements[pivotIndex].value} with element at left pointer ${tempElements[lp].value}`)
-      saveAlgoState([pivot.originalId, tempElements[lp].originalId])
-      const newPivotIndex = lp;
-      [tempElements[lp], tempElements[pivotIndex]] = [tempElements[pivotIndex],tempElements[lp]]
-      setTempElements([...tempElements])
-      quickSort(0, newPivotIndex - 1)
-      quickSort(newPivotIndex + 1, end)
-    }
-  }
-
-  const depthFirstSearch = () => {
-    if (selectedElements.length !== 1) {
-      alert("You must select exactly one element as the starting node.")
-      return
-    }
-    const start = elements.find(element => element.id === selectedElements[0])
-    let stack = []
-    let visited = new Set()
-    const graphEdgesCopy = deepCopy2DArray(graphEdges)
-    stack.push(start)
-    visited.add(start.id)
-    while (stack.length > 0) {
-      let currentNode = stack.pop()
-      const edgesContainingNode = graphEdgesCopy.filter(n => n.indexOf(currentNode.id) !== -1)
-      const adjacentNodes = edgesContainingNode.map(edge => {
-        edge.splice(edge.indexOf(currentNode.id), 1)
-        return edge
-      })
-      const unvisitedAdjacentNodes = []
-      for (let i = 0; i < adjacentNodes.length; i++) {
-        if (!visited.has(adjacentNodes[i][0])) {
-          unvisitedAdjacentNodes.push(adjacentNodes[i][0])
-        }
-      }
-      for (let i = 0; i < unvisitedAdjacentNodes.length; i++) {
-        for (let j = 0; j < elements.length; j++) {
-          if (unvisitedAdjacentNodes[i] === elements[j].id) {
-            if (stack.indexOf(elements[j]) === -1) {
-              stack.push(elements[j])
-            }
-          }
-        }
-      }
-      updateTempRecord(`CURRENT NODE: ${currentNode.value}, STACK: ${stack.map((element) => element.value)}`)
-      saveAlgoState(currentNode.id)
-    }
-
-  }
-
-  const deepCopy2DArray = (data) => {
-    const result = []
-    for (let i = 0; i < data.length; i++) {
-      result.push([...data[i]])
-    }
-    return result
-  }
-
-  const deepCopyArrayOfObjects = (data) => {
-    return data.map(elem => ({...elem}))
-  }
-
+  /**
+   * Modifies tempRecord and algoState refs to include an algorithm end 
+   * representation.
+   * 
+   * Intended to be called immediately after an algorithm is completed.
+   */
   const updateAlgoStateEnd = () => {
     updateTempRecord("ALGORITHM COMPLETED")
     saveAlgoState(elements.map((elem) => elem.id))
   }
 
+  /**
+   * Appends a copy of the 'tempElements' ref, and a list of id's of elements in the
+   * 'tempElements' ref to the algoState ref.
+   * @param {Array of Strings} affectedElements id's of elements in the 'tempElements' ref
+   */
   const saveAlgoState = (affectedElements) => {
     const data = deepCopyArrayOfObjects(tempElements)
     algoState.current = {
@@ -213,6 +160,9 @@ function App() {
     }
   }
 
+  /**
+   * Modifies algoState ref to reset it to its initialization value.
+   */
   const resetAlgoState = () => {
     algoState.current = {
       states:[],
@@ -221,6 +171,12 @@ function App() {
     }
   }
 
+  /**
+   * Increments currentState attribute of the 'algoState' ref. 
+   * Modifies 'elements' state to match algoState.current.states[currentState]
+   * Modifies 'selectedRecord' state to match record[currentState]
+   * @param {Boolean} goNext 
+   */
   const showStep = (goNext) => {
     const temp = []
     let tempCurrentState = algoState.current.currentState
@@ -261,20 +217,34 @@ function App() {
   }
 
 
+  /**
+   * Calls resetAllStates() after user confirmation.
+   */
   const clearCanvas = () => {
     if (window.confirm("This will delete all data in the canvas and record. \n\nContinue?")) {
       resetAllStates()
     }
   }
 
+  /**
+   * Appends 'text' to 'tempRecord' ref.
+   * @param {String} text 
+   */
   const updateTempRecord = (text) => {
     tempRecord.current = [...tempRecord.current, text]
   }
 
+  /**
+   * Sets displayRecord state to false if true, and vice versa.
+   */
   const toggleRecord = () => {
     setDisplayRecord(!displayRecord)
   }
 
+  /**
+   * Modifies 'record' state to copy all strings from the 'tempRecord' ref,
+   * and associates an 'id' and 'selected' attribute to each entry.
+   */
   const updateRecord = () => {
     const newRecordArray = []
     for (let i = 0; i < tempRecord.current.length; i++) {
@@ -288,6 +258,10 @@ function App() {
     setRecord(newRecordArray)
   }
 
+  /**
+   * 
+   * @param {String} id 
+   */
   const selectRecord = (id) => {
     if (!(selectedRecord === id)) {
       // first step is to deselect currently selected record (if there is such a record)
@@ -302,6 +276,11 @@ function App() {
     }
   }
 
+  /**
+   * Modifies 'currentStructure' state to be equal to 'dataStructure'.
+   * Calls resetAllStates() if 'currentStructure' is not 'none'.
+   * @param {String} dataStructure 'none', 'array' or 'graph'
+   */
   const selectStructure = (dataStructure) => {
     if (!(currentStructure === "none")) {
       if (window.confirm("This will delete all existing records and elements. \n\nContinue?")) {
@@ -312,6 +291,9 @@ function App() {
     setCurrentStructure(dataStructure)
   }
 
+  /**
+   * Modifies all states so that they are reset to their initialization values.
+   */
   const resetAllStates = () => {
     tempRecord.current = []
     setRecord([])
@@ -325,6 +307,11 @@ function App() {
     setCurrentAlgorithm("none")
   }
 
+  /**
+   * Appends an array of length 2 containing the id's of elements in the 
+   * 'elements' state to the 'graphEdges' state. Id's of the elements are
+   * taken from the 'selectedElements' state, and the state is reset afterwards.
+   */
   const addGraphEdge = () => {
     if (selectedElements.length > 2) {
       alert("You cannot select more than 2 elements when creating a graph edge.")
@@ -346,8 +333,121 @@ function App() {
     setGraphEdges([...graphEdges, newEdge])
   }
 
-  const equalArrays = (a, b) => {
-    return (a.length === b.length) && a.every((v, i) => v === b[i])
+  //ALGORITHMS
+
+  /**
+   * Modifies tempElements, tempRecord, and algoState states to reflect quick sort.  
+   * Applies quick sort to a subarray bounded by tempElements: 
+   * tempElements[start:end] (including the element at the end index)
+   * Calls updateTempRecord() to append text to the tempRecord at every significant 
+   * step in quick sort.
+   * Calls saveAlgoState() at every significant step in quick sort.
+   * @param {Integer} start 
+   * @param {Integer} end 
+   * @returns 
+   */
+     const quickSort = (start, end) => {
+      if ((end-start) < 1) { //subarray of length 1
+        return
+      }
+      const pivot = tempElements[end]
+      const pivotIndex = end
+      let lp = start
+      let rp = end - 1
+      updateTempRecord(`NEW PROCESSING SUBARRAY: The current subarray is [${tempElements.slice(start, end + 1).map((element) => element.value)}]`)
+      saveAlgoState(tempElements.slice(start, end + 1).map((element) => element.originalId))
+      updateTempRecord(`NEW PIVOT: The pivot is the last element in the subarray: ${pivot.value}`)
+      saveAlgoState([pivot.originalId])
+      while (lp <= rp) {
+        while (tempElements[lp].value <= pivot.value && lp <= pivotIndex) {
+          lp++
+          if (lp > pivotIndex) { //prevent invalid reference
+            break
+          }
+        }
+        while (tempElements[rp].value > pivot.value && rp >= start && rp >= lp) {
+          rp--
+          if (rp < 0) { //prevent invalid reference
+            break
+          }
+        }
+        if (!(lp > pivotIndex || rp < 0 || lp > rp)) {
+          updateTempRecord(`SWAPPING THESE ELEMENTS:
+          \nThe leftmost element greater than the pivot is: ${tempElements[lp].value}.
+          \nThe rightmost element less than the pivot is: ${tempElements[rp].value}.`); 
+          saveAlgoState([tempElements[lp].originalId, tempElements[rp].originalId]); //semicolon necessary
+          [tempElements[lp], tempElements[rp]] = [tempElements[rp], tempElements[lp]]
+          setTempElements([...tempElements]) //Need to spread the array to trigger re-render
+          lp++
+          rp--
+        }
+      }
+      if (lp > pivotIndex) {
+        updateTempRecord(`PIVOT IS ALREADY AT CORRECT INDEX: Value at pivot is largest in passed subarray. The pivot element will remain at its current index`)
+        saveAlgoState([pivot.originalId])
+        setTempElements([...tempElements])       
+        quickSort(start, end - 1)
+      } else if (rp < 0) {
+        updateTempRecord(`SWAPPING PIVOT AND LEFTMOST ELEMENT: Value at pivot is smallest in passed subarray. The pivot element will be 
+        swapped with the leftmost element in the passed subarray ${tempElements[start].value}`)
+        saveAlgoState([pivot.originalId, tempElements[start].originalId])
+        const newPivotIndex = start;
+        [tempElements[start], tempElements[pivotIndex]] = [tempElements[pivotIndex], tempElements[start]]
+        setTempElements([...tempElements])
+        quickSort(newPivotIndex + 1, end)
+      } else {
+        updateTempRecord(`SWAPPING PIVOT TO CORRECT INDEX: Swapping pivot ${tempElements[pivotIndex].value} with element at left pointer ${tempElements[lp].value}`)
+        saveAlgoState([pivot.originalId, tempElements[lp].originalId])
+        const newPivotIndex = lp;
+        [tempElements[lp], tempElements[pivotIndex]] = [tempElements[pivotIndex],tempElements[lp]]
+        setTempElements([...tempElements])
+        quickSort(0, newPivotIndex - 1)
+        quickSort(newPivotIndex + 1, end)
+      }
+  }
+  
+    /**
+     * Modifies tempRecord and algoState refs to reflect depth first search.
+     * Whenever a new node is explored, updateTempRecord() is called to append
+     * text containing current node and stack information to tempRecord, and
+     * saveAlgoState() is also called to save the current node and stack.
+     */
+    const depthFirstSearch = () => {
+      if (selectedElements.length !== 1) {
+        alert("You must select exactly one element as the starting node.")
+        return
+      }
+      const start = elements.find(element => element.id === selectedElements[0])
+      let stack = []
+      let visited = new Set()
+      const graphEdgesCopy = deepCopy2DArray(graphEdges)
+      stack.push(start)
+      visited.add(start.id)
+      while (stack.length > 0) {
+        let currentNode = stack.pop()
+        const edgesContainingNode = graphEdgesCopy.filter(n => n.indexOf(currentNode.id) !== -1)
+        const adjacentNodes = edgesContainingNode.map(edge => {
+          edge.splice(edge.indexOf(currentNode.id), 1)
+          return edge
+        })
+        const unvisitedAdjacentNodes = []
+        for (let i = 0; i < adjacentNodes.length; i++) {
+          if (!visited.has(adjacentNodes[i][0])) {
+            unvisitedAdjacentNodes.push(adjacentNodes[i][0])
+          }
+        }
+        for (let i = 0; i < unvisitedAdjacentNodes.length; i++) {
+          for (let j = 0; j < elements.length; j++) {
+            if (unvisitedAdjacentNodes[i] === elements[j].id) {
+              if (stack.indexOf(elements[j]) === -1) {
+                stack.push(elements[j])
+              }
+            }
+          }
+        }
+        updateTempRecord(`CURRENT NODE: ${currentNode.value}, STACK: ${stack.map((element) => element.value)}`)
+        saveAlgoState(currentNode.id)
+      }
   }
 
   return (
