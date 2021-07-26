@@ -273,12 +273,15 @@ function App() {
 
   const toggleRecord = () => {
     setDisplayRecord(!displayRecord)
+  }
+
+  const updateRecord = () => {
     const newRecordArray = []
     for (let i = 0; i < tempRecord.current.length; i++) {
       const newRecord = {
         id: uuidv4(),
         text: tempRecord.current[i],
-        selected: false
+        selected:false
       }
       newRecordArray.push(newRecord)
     }
@@ -359,6 +362,7 @@ function App() {
       clearCanvas={clearCanvas}
       toggleRecord={toggleRecord}
       displayRecord={displayRecord}
+      updateRecord={updateRecord}
       currentStructure={currentStructure}
       selectStructure={selectStructure}
       graphEdges={graphEdges}
