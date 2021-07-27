@@ -2,7 +2,7 @@
 
 Web application built with React that visualizes common data structures, with support for descriptive step-by-step executions of well known algorithms. 
 
-Current available at https://calvin-lu.github.io/data-visualizer/
+Currently available at: https://calvin-lu.github.io/data-visualizer/
 
 # Site
 
